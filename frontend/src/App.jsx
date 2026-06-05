@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const API = "http://localhost:3000/api";
+const API = "https://soundwave-backend-p2hj.onrender.com/api";
 
 // ─── API helpers ────────────────────────────────────────────────────────────
 const api = {
