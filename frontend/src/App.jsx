@@ -7,20 +7,28 @@ const api = {
   post: (path, body) =>
     fetch(`${API}${path}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify(body),
     }).then((r) => r.json()),
 
   postForm: (path, formData) =>
     fetch(`${API}${path}`, {
       method: "POST",
-      credentials: "include",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem('token')}`
+      },
       body: formData,
     }).then((r) => r.json()),
 
   get: (path) =>
-    fetch(`${API}${path}`, { credentials: "include" }).then((r) => r.json()),
+    fetch(`${API}${path}`, { 
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then((r) => r.json()),
 };
 
 // ─── Icons ───────────────────────────────────────────────────────────────────
@@ -106,25 +114,27 @@ function AuthPage({ onLogin }) {
   const [loading, setLoading] = useState(false);
 
   const handle = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      const path = mode === "login" ? "/auth/login" : "/auth/register";
-      const body = mode === "login"
-        ? { email: form.email, password: form.password }
-        : form;
-      const res = await api.post(path, body);
-      if (res.user || res.message?.toLowerCase().includes("success")) {
-        onLogin(res.user || { username: form.username, role: form.role });
-      } else {
-        setError(res.message || "Something went wrong");
-      }
-    } catch {
-      setError("Network error");
+  e.preventDefault();
+  setLoading(true);
+  setError("");
+  try {
+    const path = mode === "login" ? "/auth/login" : "/auth/register";
+    const body = mode === "login"
+      ? { email: form.email, password: form.password }
+      : form;
+    const res = await api.post(path, body);
+    if (res.user || res.message?.toLowerCase().includes("success")) {
+      // ✅ Save token to localStorage
+      if (res.token) localStorage.setItem('token', res.token);
+      onLogin(res.user || { username: form.username, role: form.role });
+    } else {
+      setError(res.message || "Something went wrong");
     }
-    setLoading(false);
-  };
+  } catch {
+    setError("Network error");
+  }
+  setLoading(false);
+};
 
   return (
     <div style={styles.authBg}>
