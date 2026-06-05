@@ -1,4 +1,4 @@
-const { ImageKit } = require("@imageKit/nodejs")
+const { ImageKit } = require("@imageKit")
 
 const ImageKitClient = new ImageKit({
     privateKey: process.env.IMAGE_PRIVATE_KEY,
