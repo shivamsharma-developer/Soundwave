@@ -7,7 +7,7 @@ const musicRoutes = require('./routes/music.routes');
 const app = express();
 
 app.use(cors({
-  origin: 'https://soundwave-wm5t.vercel.app', // your React app URL
+  origin: 'https://soundwave-ebon-chi.vercel.app/', // your React app URL
   credentials: true               // allows cookies to be sent
 }));
 
